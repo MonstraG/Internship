@@ -36,14 +36,8 @@ class IndexController {
 
         //creating location object
         try {
-            if (payload.containsKey("id")){
-                location = new Location(Long.parseLong(payload.get("id")),
-                        Double.parseDouble(payload.get("latitude")),
-                        Double.parseDouble(payload.get("longitude")));
-            } else {
-                location = new Location(Double.parseDouble(payload.get("latitude")),
-                        Double.parseDouble(payload.get("longitude")));
-            }
+            location = new Location(Double.parseDouble(payload.get("latitude")),
+                    Double.parseDouble(payload.get("longitude")));
         } catch(Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -52,11 +46,7 @@ class IndexController {
 
         //inserting it into the table
         try {
-            if (payload.containsKey("id")){
-                locationDAO.createLocation(location);
-            } else {
-                locationDAO.createLocationAutoId(location);
-            }
+            locationDAO.createLocationAutoId(location);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -66,6 +56,7 @@ class IndexController {
 
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 
     /**
      * Handles GET requests on /location:

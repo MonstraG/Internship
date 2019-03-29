@@ -15,4 +15,6 @@ public interface LocationDAO {
 
     boolean createLocationAutoId(Location location);
 
+    Location getLastLocation();
+
 }
