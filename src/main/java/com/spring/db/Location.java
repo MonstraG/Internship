@@ -11,8 +11,19 @@ public class Location {
     Location() { }
 
     public Location(Double latitude, Double longitude) {
+        if (latitude == null || longitude == null) {
+            throw new IllegalArgumentException("Couldn't find location data in request"); 
+        }
         this.latitude = latitude;
         this.longitude = longitude;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
+    }
+
+    public Location(Long id, Double latitude, Double longitude) {
+        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     public Location(Long id, Double latitude, Double longitude, Timestamp timestamp) {
@@ -22,25 +33,21 @@ public class Location {
         this.timestamp = timestamp;
     }
 
-    Long getId() {
-        return id;
-    }
-    void setId(Long id) { this.id = id; }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    Double getLatitude() {
-        return latitude;
-    }
-    void setLatitude(Double latitude) {
+    public  Double getLatitude() { return latitude; }
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    Double getLongitude() { return longitude; }
-    void setLongitude(Double longitude) {
+    public Double getLongitude() { return longitude; }
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
-    Timestamp getTimestamp() { return timestamp; }
-    void setTimestamp(Timestamp timestamp) { this.timestamp = timestamp; }
+    public Timestamp getTimestamp() { return timestamp; }
+    public void setTimestamp(Timestamp timestamp) { this.timestamp = timestamp; }
 
     @Override
     public String toString() {
@@ -49,13 +56,13 @@ public class Location {
     }
 
     /**
-     * Checks if 2 locations are within 5 meters of each other.
-     * @param loc1 first location
-     * @param loc2 second location
-     * @return true if distance between them less than 5 meters.
+     * Checks if this location and new one are within 5 meters and 5 minutes of each other.
+     * @param location second location
+     * @return true if distance between them less than 5 meters and 5 minutes.
      */
-    public boolean locationsClose(Location loc1, Location loc2) {
-        return distance(loc1.getLatitude(), loc1.getLongitude(), loc2.getLatitude(), loc2.getLongitude()) < 5.0;
+    public boolean needToMigrate(Location location) {
+        return distance(this.getLatitude(), this.getLongitude(), location.getLatitude(), location.getLongitude()) < 5.0
+                && (timestampDifference(this.getTimestamp(), location.getTimestamp()) < 5);
     }
 
     /**
@@ -67,31 +74,28 @@ public class Location {
      * @return distance in meters.
      */
     private double distance(double lat1, double lng1, double lat2, double lng2) {
-
-        double earthRadius = 6371000; //meters
-
-        double dLat = Math.toRadians(lat2-lat1);
-        double dLng = Math.toRadians(lng2-lng1);
-
-        double sindLat = Math.sin(dLat / 2);
-        double sindLng = Math.sin(dLng / 2);
-
-        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
-                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
-
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-
-        return earthRadius * c;
+        return Math.sqrt((lat1 - lat2) * (lat1 - lat2) + (lng1 - lng2) * (lng1 - lng2));
     }
 
     /**
-     * Returns average location of two given.
-     * @param loc1 first location
-     * @param loc2 second location
+     * Finds difference in minutes between 2 timestamps.
+     * @param currentTime first timestamp
+     * @param oldTime second timestamp
+     * @return difference in minutes
+     */
+    private static long timestampDifference(Timestamp currentTime, Timestamp oldTime)
+    {
+        long diff = Math.abs(currentTime.getTime() - oldTime.getTime());
+        return diff / (60000);
+    }
+
+    /**
+     * Returns average location of this and new location
+     * @param secondLocation second location
      * @return new location object with average latitude and longitude.
      */
-    public Location getAverageLocation(Location loc1, Location loc2) {
-        return new Location((loc1.getLatitude() + loc2.getLatitude()) / 2,
-                (loc1.getLongitude() + loc2.getLongitude()) / 2);
+    public Location getAverageLocation(Location secondLocation) {
+        return new Location(this.getId(), (this.getLatitude() + secondLocation.getLatitude()) / 2,
+                (this.getLongitude() + secondLocation.getLongitude()) / 2);
     }
 }
