@@ -1,8 +1,10 @@
 package com.spring.controller;
 
 import com.google.gson.Gson;
-import com.spring.db.Location;
-import com.spring.db.LocationDAO;
+import com.spring.db.Key.Key;
+import com.spring.db.Key.KeyDAO;
+import com.spring.db.Location.Location;
+import com.spring.db.Location.LocationDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +18,8 @@ class IndexController {
 
     @Autowired
     LocationDAO locationDAO;
+    @Autowired
+    KeyDAO keyDAO;
 
     /**
      * Handles POST requests on /location
@@ -28,7 +32,7 @@ class IndexController {
         Location location;
         Location oldLocation;
         //creating location object
-        try { location = new Location(payload.getLatitude(), payload.getLongitude()); }
+        try { location = new Location(payload.getLatitude(), payload.getLongitude()); } //FIXME
         catch(Exception e){
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -74,6 +78,31 @@ class IndexController {
     @ResponseBody
     public String locationGet() {
         return new Gson().toJson(locationDAO.getAllLocations());
+    }
+
+    /**
+     * Handles POST requests on /install:
+     */
+    @RequestMapping(value = "/install", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity installKey(@RequestBody Key payload) {
+        Key key;
+        //creating key object
+        try { key = new Key(payload.getKey()); } //FIXME
+        catch(Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Following exception was thrown when trying to create new Location:\n" + e.toString());
+        }
+
+        try { keyDAO.createKey(key); }
+        catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Following exception was thrown when trying to add item to the table:\n" + e.toString());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 

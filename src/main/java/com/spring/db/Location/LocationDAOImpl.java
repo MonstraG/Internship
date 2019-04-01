@@ -1,4 +1,4 @@
-package com.spring.db;
+package com.spring.db.Location;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

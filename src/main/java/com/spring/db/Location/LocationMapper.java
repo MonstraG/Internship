@@ -1,4 +1,4 @@
-package com.spring.db;
+package com.spring.db.Location;
 
 import org.springframework.jdbc.core.RowMapper;
 

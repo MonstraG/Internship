@@ -2,6 +2,7 @@ package com.spring.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -28,6 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
             .csrf().disable()
             .authorizeRequests()
             .antMatchers( "/location").permitAll()
+                .antMatchers(HttpMethod.POST, "/install").permitAll()
             .anyRequest().authenticated();
     }
 }

@@ -1,4 +1,4 @@
-package com.spring.db;
+package com.spring.db.Location;
 
 import java.util.List;
 

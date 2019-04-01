@@ -1,4 +1,4 @@
-package com.spring.db;
+package com.spring.db.Location;
 
 import java.sql.Timestamp;
 
@@ -12,7 +12,7 @@ public class Location {
 
     public Location(Double latitude, Double longitude) {
         if (latitude == null || longitude == null) {
-            throw new IllegalArgumentException("Couldn't find location data in request"); 
+            throw new IllegalArgumentException("Couldn't find location data in request");
         }
         this.latitude = latitude;
         this.longitude = longitude;
@@ -20,6 +20,9 @@ public class Location {
     }
 
     public Location(Long id, Double latitude, Double longitude) {
+        if (latitude == null || longitude == null) {
+            throw new IllegalArgumentException("Couldn't find location data in request");
+        }
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -27,6 +30,9 @@ public class Location {
     }
 
     public Location(Long id, Double latitude, Double longitude, Timestamp timestamp) {
+        if (latitude == null || longitude == null) {
+            throw new IllegalArgumentException("Couldn't find location data in request");
+        }
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
