@@ -99,6 +99,10 @@ class IndexController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @RequestMapping(value = "/ui/index", method = RequestMethod.GET)
+    @ResponseBody
+    public void uiIndexGet() { }
+
 
     /**
      * Responds with 404 for everything else.

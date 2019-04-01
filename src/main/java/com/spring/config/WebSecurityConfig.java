@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
             .csrf().disable()
                 .addFilterAfter(keyFilter, BasicAuthenticationFilter.class)
             .authorizeRequests()
-            .antMatchers( "/location").permitAll()
+            .antMatchers( "/location", "/ui/index").permitAll()
                 .antMatchers(HttpMethod.POST, "/install").permitAll()
             .anyRequest().authenticated();
     }
