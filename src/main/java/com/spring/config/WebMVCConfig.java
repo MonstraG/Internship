@@ -8,10 +8,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * Config for WebMVC, while there isn't anything inside, it's existence and the fact that it implements
  * WebMvcConfigurer allows Spring MVC to work.
- * And @EnableWebMvc too.
- * And @ComponentScan.
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages= {"com.spring"})
-public class WebMVCConfig implements WebMvcConfigurer { }
+@ComponentScan(basePackages = {"com.spring"})
+public class WebMVCConfig implements WebMvcConfigurer {
+}

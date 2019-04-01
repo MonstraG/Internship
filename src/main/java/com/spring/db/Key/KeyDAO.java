@@ -5,6 +5,8 @@ import java.util.List;
 public interface KeyDAO {
     Key getKeyById(Long id);
 
+    Key getKeyByValue(String key);
+
     List<Key> getAllKeys();
 
     boolean createKey(Key key);
@@ -12,4 +14,6 @@ public interface KeyDAO {
     boolean updateKey(Key key);
 
     boolean deleteKey(Key key);
+
+    boolean keyExists(String key);
 }

@@ -1,4 +1,4 @@
-package com.spring.controller;
+package com.spring.controllers;
 
 import com.google.gson.Gson;
 import com.spring.db.Key.Key;
@@ -30,16 +30,15 @@ class IndexController {
     @ResponseBody
     public ResponseEntity locationPost(@RequestBody Location payload) {
         Location location;
-        Location oldLocation;
-        //creating location object
-        try { location = new Location(payload.getLatitude(), payload.getLongitude()); } //FIXME
-        catch(Exception e){
+        try {
+            location = new Location(payload.getLatitude(), payload.getLongitude()); //needed to add timestamp
+        } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Following exception was thrown when trying to create new Location:\n" + e.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not find latitude or longitude data.");
         }
 
         //getting last location from table
+        Location oldLocation;
         try { oldLocation = locationDAO.getLastLocation(); }
         catch (Exception e) {
             e.printStackTrace();
@@ -85,14 +84,9 @@ class IndexController {
      */
     @RequestMapping(value = "/install", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity installKey(@RequestBody Key payload) {
-        Key key;
-        //creating key object
-        try { key = new Key(payload.getKey()); } //FIXME
-        catch(Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Following exception was thrown when trying to create new Location:\n" + e.toString());
+    public ResponseEntity installKey(@RequestBody Key key) {
+        if (key.getKey() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Key was not received.");
         }
 
         try { keyDAO.createKey(key); }
