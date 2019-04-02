@@ -17,6 +17,10 @@ public class KeyFilter extends OncePerRequestFilter {
     @Autowired
     KeyDAO keyDAO;
 
+    /**
+     * Put by WebSecurityConfig before every request. Checks if target is /location, and checks if valid API-key
+     * header is provided. If not, blocks request. otherwise passes on.
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {

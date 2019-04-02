@@ -9,50 +9,33 @@
     <url>http://maven.apache.org</url>
 
     <properties>
-        <java-version>1.7</java-version>
-        <springframework-version>5.1.4.RELEASE</springframework-version>
+        <springframework-version>5.1.6.RELEASE</springframework-version>
+        <springsecurity-version>5.1.4.RELEASE</springsecurity-version>
     </properties>
 
     <dependencies>
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${springframework-version}</version>
-            <!-- will come with all needed Spring dependencies such as spring-core
-                and spring-beans -->
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aspects</artifactId>
-            <version>${springframework-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${springframework-version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+        <!-- slf4j -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.7.26</version>
         </dependency>
         <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
-            <version>${springframework-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>${springframework-version}</version>
+            <version>${springsecurity-version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
-            <version>${springframework-version}</version>
+            <version>${springsecurity-version}</version>
         </dependency>
         <!-- Servlet -->
         <dependency>
@@ -101,18 +84,21 @@
             <artifactId>thymeleaf</artifactId>
             <version>3.0.11.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring5</artifactId>
+            <version>3.0.11.RELEASE</version>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
-                <version>2.0</version>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat</artifactId>
+                <version>9.0.17</version>
             </plugin>
         </plugins>
-
         <finalName>springmvc-javaconfig</finalName>
     </build>
-
 </project>

@@ -100,7 +100,6 @@ class IndexController {
     }
 
     @RequestMapping(value = "/ui/index", method = RequestMethod.GET)
-    @ResponseBody
     public void uiIndexGet() { }
 
 

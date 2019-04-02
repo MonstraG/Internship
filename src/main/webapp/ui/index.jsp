@@ -8,6 +8,6 @@
           href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
 </head>
 <body>
-    <p th:text="#{home.welcome}">Welcome to our grocery store!</p>
+    <p th:text="${#execInfo.now.time}"></p>
 </body>
 </html>
