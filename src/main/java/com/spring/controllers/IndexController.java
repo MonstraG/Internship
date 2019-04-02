@@ -11,6 +11,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.ViewResolver;
+import sun.text.normalizer.NormalizerBase;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 
 @Controller
 @RequestMapping("/*")
@@ -20,6 +28,7 @@ class IndexController {
     LocationDAO locationDAO;
     @Autowired
     KeyDAO keyDAO;
+    private Gson gson = new Gson();
 
     /**
      * Handles POST requests on /location
@@ -70,13 +79,13 @@ class IndexController {
 
     /**
      * Handles GET requests on /location:
-     * returns full locations table as JSON (via GSON) body in response.
+     * returns full locations table as JSON (via Gson) body in response.
      * @return response with JSON of locations table.
      */
     @RequestMapping(value = "/location", method = RequestMethod.GET)
     @ResponseBody
     public String locationGet() {
-        return new Gson().toJson(locationDAO.getAllLocations());
+        return gson.toJson(locationDAO.getAllLocations());
     }
 
     /**
@@ -100,14 +109,13 @@ class IndexController {
     }
 
     @RequestMapping(value = "/ui/index", method = RequestMethod.GET)
-    public void uiIndexGet() { }
+    public ModelAndView uiIndexGet() {
+        return new ModelAndView("ui/index");
+    }
 
-
-    /**
-     * Responds with 404 for everything else.
-     */
-    @RequestMapping(value = "/")
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public void notFound() { }
+    @RequestMapping(value = "/login")
+    public ModelAndView login() {
+        return new ModelAndView("login");
+    }
 }
 

@@ -1,0 +1,47 @@
+body
+{
+    background: rgba(220,220,255,1);
+    font: normal 14px/normal "Lucida Sans Unicode", "Lucida Grande", sans-serif;}
+
+.login-page {
+    background: aliceblue;
+    width: 400px;
+    margin: auto;
+    box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.2) inset;
+}
+
+.login-error, .input-field
+{
+    width: 75%;
+}
+
+.btn
+{
+    width: 80%;
+}
+
+.input-field, .btn, .login-error
+{
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    position: relative;
+    margin: 3% 10%;
+    padding: 10px 10px 10px 10px;
+    color: rgba(0,0,0,0.95);
+    -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
+    box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
+    text-shadow: 1px 1px 0 rgba(255,255,255,0.66) ;
+}
+
+
+.login-error
+{
+    border: lightcoral 2px;
+    background: lightpink;
+}
+
+.input-field, .btn
+{
+    border: 1px solid #b7b7b7;
+    background: rgba(255,255,255,1);
+}
