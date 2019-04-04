@@ -4,36 +4,40 @@ import java.sql.Timestamp;
 
 public class Location {
     private Long id;
+    private String key;
     private Double latitude;
     private Double longitude;
     private Timestamp timestamp;
 
     Location() { }
 
-    public Location(Double latitude, Double longitude) {
-        if (latitude == null || longitude == null) {
+    public Location(String key, Double latitude, Double longitude) {
+        if (key == null || latitude == null || longitude == null) {
             throw new IllegalArgumentException("Couldn't find location data in request");
         }
+        this.key = key;
         this.latitude = latitude;
         this.longitude = longitude;
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
-    public Location(Long id, Double latitude, Double longitude) {
-        if (latitude == null || longitude == null) {
+    public Location(Long id, String key, Double latitude, Double longitude) {
+        if (id == null || key == null || latitude == null || longitude == null) {
             throw new IllegalArgumentException("Couldn't find location data in request");
         }
         this.id = id;
+        this.key = key;
         this.latitude = latitude;
         this.longitude = longitude;
         this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
-    public Location(Long id, Double latitude, Double longitude, Timestamp timestamp) {
-        if (latitude == null || longitude == null) {
+    public Location(Long id, String key, Double latitude, Double longitude, Timestamp timestamp) {
+        if (key == null || latitude == null || longitude == null) {
             throw new IllegalArgumentException("Couldn't find location data in request");
         }
         this.id = id;
+        this.key = key;
         this.latitude = latitude;
         this.longitude = longitude;
         this.timestamp = timestamp;
@@ -41,6 +45,9 @@ public class Location {
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public String getKey() { return key; }
+    public void setKey(String key) { this.key = key; }
 
     public  Double getLatitude() { return latitude; }
     public void setLatitude(Double latitude) {
@@ -57,7 +64,7 @@ public class Location {
 
     @Override
     public String toString() {
-        return "Person{" + "id=" + id + ", latitude='" + latitude + '\'' + ", longitude='" + longitude + '\'' +
+        return "Person{" + "key=" + key + ", latitude='" + latitude + '\'' + ", longitude='" + longitude + '\'' +
                 ", timestamp='" + timestamp + '\'' + '}';
     }
 
@@ -67,8 +74,9 @@ public class Location {
      * @return true if distance between them less than 5 meters and 5 minutes.
      */
     public boolean needToMigrate(Location location) {
-        return distance(this.getLatitude(), this.getLongitude(), location.getLatitude(), location.getLongitude()) < 5.0
-                && (timestampDifference(this.getTimestamp(), location.getTimestamp()) < 5);
+        return this.getKey().equals(location.getKey()) && //same key
+                distance(this.getLatitude(), this.getLongitude(), location.getLatitude(), location.getLongitude()) < 5.0 //close distance-wise
+                && (timestampDifference(this.getTimestamp(), location.getTimestamp()) < 5); //close time-wise
     }
 
     /**
@@ -80,7 +88,17 @@ public class Location {
      * @return distance in meters.
      */
     private double distance(double lat1, double lng1, double lat2, double lng2) {
-        return Math.sqrt((lat1 - lat2) * (lat1 - lat2) + (lng1 - lng2) * (lng1 - lng2));
+        int earthRadiusMeters = 6378100;
+
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLon = Math.toRadians(lng2-lng1);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return earthRadiusMeters * c;
     }
 
     /**
@@ -101,7 +119,7 @@ public class Location {
      * @return new location object with average latitude and longitude.
      */
     public Location getAverageLocation(Location secondLocation) {
-        return new Location(this.getId(), (this.getLatitude() + secondLocation.getLatitude()) / 2,
+        return new Location(this.getId(), this.getKey(), (this.getLatitude() + secondLocation.getLatitude()) / 2,
                 (this.getLongitude() + secondLocation.getLongitude()) / 2);
     }
 }

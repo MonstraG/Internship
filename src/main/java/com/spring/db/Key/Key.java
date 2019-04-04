@@ -3,27 +3,21 @@ package com.spring.db.Key;
 import java.io.Serializable;
 
 public class Key implements Serializable {
-    private Long id;
+    private String username;
     private String key;
 
     Key(){}
 
-    public Key(String key) {
-        if (key == null)
+    public Key(String username, String key) {
+        if (username == null || key == null)
             throw new IllegalArgumentException();
+        this.username = username;
         this.key = key;
     }
 
-    public Key(Long id, String key) {
-        if (key == null)
-            throw new IllegalArgumentException();
-        this.id = id;
-        this.key = key;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public void setKey(String key) { this.key = key; }
     public String getKey() { return key; }
+    public void setKey(String key) { this.key = key; }
 }

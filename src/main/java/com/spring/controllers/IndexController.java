@@ -5,20 +5,19 @@ import com.spring.db.Key.Key;
 import com.spring.db.Key.KeyDAO;
 import com.spring.db.Location.Location;
 import com.spring.db.Location.LocationDAO;
+import com.spring.db.User.UserDAO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.ViewResolver;
-import sun.text.normalizer.NormalizerBase;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.net.URI;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/*")
@@ -28,19 +27,21 @@ class IndexController {
     LocationDAO locationDAO;
     @Autowired
     KeyDAO keyDAO;
+    @Autowired
+    UserDAO userDAO;
+
     private Gson gson = new Gson();
 
     /**
      * Handles POST requests on /location
-     * @param payload payload of POST request
-     * @return response (with set body) which will be sent to requester.
      */
     @RequestMapping(value = "/location", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity locationPost(@RequestBody Location payload) {
+    public ResponseEntity locationPost(@RequestBody Location payload, @RequestHeader Map<String, String> header) {
         Location location;
+        String key = header.get("key");
         try {
-            location = new Location(payload.getLatitude(), payload.getLongitude()); //needed to add timestamp
+            location = new Location(key, payload.getLatitude(), payload.getLongitude()); //adds timestamp.
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Could not find latitude or longitude data.");
@@ -48,7 +49,7 @@ class IndexController {
 
         //getting last location from table
         Location oldLocation;
-        try { oldLocation = locationDAO.getLastLocation(); }
+        try { oldLocation = locationDAO.getLastLocation(location); }
         catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -58,7 +59,9 @@ class IndexController {
         if ((oldLocation != null) && location.needToMigrate(oldLocation)) {
             //updating last location
             Location updatedLocation = oldLocation.getAverageLocation(location);
-            try { locationDAO.updateLocation(updatedLocation); }
+            try {
+                locationDAO.updateLocation(updatedLocation);
+            }
             catch (Exception e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -66,7 +69,7 @@ class IndexController {
             }
         } else {
             //inserting new location into the table
-            try { locationDAO.createLocationAutoId(location); }
+            try { locationDAO.createLocation(location); }
             catch (Exception e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -76,12 +79,14 @@ class IndexController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @RequestMapping(value = "/location/*", method = RequestMethod.GET)
+    @ResponseBody
+    public String locationGet(HttpServletRequest request) {
+        return gson.toJson(locationDAO.getAllLocationsByKey(request.getRequestURI().split("/location/")[1]));
+    }
 
-    /**
-     * Handles GET requests on /location:
-     * returns full locations table as JSON (via Gson) body in response.
-     * @return response with JSON of locations table.
-     */
+    //TODO: ADD SOMETHING TO SHOW ALL BY USER.
+
     @RequestMapping(value = "/location", method = RequestMethod.GET)
     @ResponseBody
     public String locationGet() {
@@ -94,11 +99,21 @@ class IndexController {
     @RequestMapping(value = "/install", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity installKey(@RequestBody Key key) {
-        if (key.getKey() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Key was not received.");
+        if (key.getUsername() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username was not provided.");
         }
 
-        try { keyDAO.createKey(key); }
+        if (key.getKey() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Key was not provided.");
+        }
+
+        try {
+            if (userDAO.userExists(key.getUsername())) {
+                keyDAO.createKey(key);
+            }
+            else
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Provided user does not exist.");
+        }
         catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -117,5 +132,16 @@ class IndexController {
     public ModelAndView login() {
         return new ModelAndView("login");
     }
-}
+
+    @RequestMapping(value = "/username", method = RequestMethod.GET)
+    @ResponseBody
+    public String currentUserName(Authentication authentication) {
+        return new Gson().toJson(authentication.getName());
+    }
+
+    @RequestMapping(value = "/keys", method = RequestMethod.POST)
+    @ResponseBody
+    public String keysGet(@RequestBody String username) {
+        return gson.toJson(keyDAO.getAllKeysByUsername(username));
+    }}
 

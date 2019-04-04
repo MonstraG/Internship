@@ -25,10 +25,11 @@ public class KeyFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
 
-        String key = request.getHeader("API-Key");
+        String key = request.getHeader("key");
         try {
-            if (request.getRequestURI().equals("/location") && !keyDAO.keyExists(key)) {
+            if (request.getRequestURI().equals("/location") && !keyDAO.keyExists(key) && request.getMethod().equals("POST")) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
         }
         catch (Exception e) {

@@ -29,4 +29,13 @@ public class UserDAO {
             }
         });
     }
+
+    public boolean userExists(String username) {
+        String SQL_USER_EXISTS = "select count(*) from users where username = ?";
+        Boolean result = jdbcTemplate.queryForObject(SQL_USER_EXISTS, new Object[]{username}, Boolean.class);
+        if (result == null) {
+            return false;
+        }
+        return result;
+    }
 }

@@ -1,0 +1,45 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+.page {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+.header {
+    margin: 0 0 10px 0;
+    padding: 10px;
+    -webkit-box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
+    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
+    height: 40px;
+    display: flex;
+}
+
+.login-button {
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    position: relative;
+    padding: 10px 10px 10px 10px;
+    color: rgba(255,255,255,0.95);
+    -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
+    box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
+    background: dodgerblue;
+    width: 8%;
+    margin-left: 92%
+}
+
+.login-username
+{
+    margin-left: 92%;
+    width: 8%;
+    padding: 10px 10px 10px 10px;
+}
+
+.map {
+    width: 100%;
+    flex-grow : 1;
+}

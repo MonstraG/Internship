@@ -1,6 +1,7 @@
 package com.spring.config;
 
 import com.spring.db.User.UserDetailServiceImp;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import javax.servlet.Filter;
 
@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         http
             .csrf().disable().addFilterAfter(keyFilter, BasicAuthenticationFilter.class)
             .authorizeRequests()
-                .antMatchers( "/location", "/login*", "/resources/**").permitAll()
+                .antMatchers( "/location", "/login*", "/resources/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/install").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -57,12 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
     }
 
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry
-                .addResourceHandler("/resources/**")
-                .addResourceLocations("/resources/","/other-resources/")
-                .setCachePeriod(3600)
-                .resourceChain(true)
-                .addResolver(new PathResourceResolver());
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
 }
 

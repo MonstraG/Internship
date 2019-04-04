@@ -9,7 +9,7 @@ public class KeyMapper implements RowMapper<Key> {
 
     public Key mapRow(ResultSet resultSet, int i) throws SQLException {
         Key key = new Key();
-        key.setId(resultSet.getLong("id"));
+        key.setUsername(resultSet.getString("username"));
         key.setKey(resultSet.getString("key"));
         return key;
     }

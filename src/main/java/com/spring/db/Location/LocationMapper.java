@@ -10,6 +10,7 @@ public class LocationMapper implements RowMapper<Location> {
     public Location mapRow(ResultSet resultSet, int i) throws SQLException {
         Location Location = new Location();
         Location.setId(resultSet.getLong("id"));
+        Location.setKey(resultSet.getString("key"));
         Location.setLatitude(resultSet.getDouble("latitude"));
         Location.setLongitude(resultSet.getDouble("longitude"));
         Location.setTimestamp(resultSet.getTimestamp("ts"));
