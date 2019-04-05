@@ -1,5 +1,6 @@
 package com.spring.controllers;
 
+import com.google.gson.Gson;
 import com.spring.db.Key.Key;
 import com.spring.db.Key.KeyDAO;
 import com.spring.db.Location.Location;
@@ -7,9 +8,12 @@ import com.spring.db.Location.LocationDAO;
 import com.spring.db.User.UserDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -65,7 +69,10 @@ class IndexController {
             }
         } else {
             //inserting new location into the table
-            try { locationDAO.createLocation(location); }
+            try {
+                locationDAO.createLocation(location);
+                updateEveryone(location);
+            }
             catch (Exception e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -74,6 +81,7 @@ class IndexController {
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
 
     @RequestMapping(value = "/location/{key}", method = RequestMethod.GET)
     @ResponseBody
@@ -137,5 +145,15 @@ class IndexController {
     @ResponseBody
     public List<Key> keysGet(@PathVariable String username) {
         return keyDAO.getAllKeysByUsername(username);
-    }}
+    }
+
+    @Autowired
+    SimpMessagingTemplate template;
+
+    public void updateEveryone(Location location) {
+        this.template.convertAndSend("/location-updates/" + location.getKey(), location.toJSON());
+    }
+}
+
+
 

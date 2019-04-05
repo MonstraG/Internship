@@ -62,10 +62,8 @@ public class Location {
     public Timestamp getTimestamp() { return timestamp; }
     public void setTimestamp(Timestamp timestamp) { this.timestamp = timestamp; }
 
-    @Override
-    public String toString() {
-        return "Person{" + "key=" + key + ", latitude='" + latitude + '\'' + ", longitude='" + longitude + '\'' +
-                ", timestamp='" + timestamp + '\'' + '}';
+    public String toJSON() {
+        return "{" + "\"key\":\"" + key + "\", \"latitude\":" + latitude + ", \"longitude\":" + longitude +'}';
     }
 
     /**

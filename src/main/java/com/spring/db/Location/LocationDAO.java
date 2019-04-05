@@ -58,4 +58,6 @@ public class LocationDAO {
             }
         });
     }
+
+    //TODO: GET LAST X LOCATIONS
 }
