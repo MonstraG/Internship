@@ -1,6 +1,5 @@
 package com.spring.controllers;
 
-import com.google.gson.Gson;
 import com.spring.db.Key.Key;
 import com.spring.db.Key.KeyDAO;
 import com.spring.db.Location.Location;
@@ -16,8 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/*")
@@ -29,8 +27,6 @@ class IndexController {
     KeyDAO keyDAO;
     @Autowired
     UserDAO userDAO;
-
-    private Gson gson = new Gson();
 
     /**
      * Handles POST requests on /location
@@ -79,18 +75,16 @@ class IndexController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @RequestMapping(value = "/location/*", method = RequestMethod.GET)
+    @RequestMapping(value = "/location/{key}", method = RequestMethod.GET)
     @ResponseBody
-    public String locationGet(HttpServletRequest request) {
-        return gson.toJson(locationDAO.getAllLocationsByKey(request.getRequestURI().split("/location/")[1]));
+    public List<Location> locationGet(@PathVariable String key) {
+        return locationDAO.getAllLocationsByKey(key);
     }
-
-    //TODO: ADD SOMETHING TO SHOW ALL BY USER.
 
     @RequestMapping(value = "/location", method = RequestMethod.GET)
     @ResponseBody
-    public String locationGet() {
-        return gson.toJson(locationDAO.getAllLocations());
+    public List<Location> locationGet() {
+        return locationDAO.getAllLocations();
     }
 
     /**
@@ -133,15 +127,15 @@ class IndexController {
         return new ModelAndView("login");
     }
 
-    @RequestMapping(value = "/username", method = RequestMethod.GET)
+    @RequestMapping(value = "/username", method = RequestMethod.GET, produces="text/plain")
     @ResponseBody
     public String currentUserName(Authentication authentication) {
-        return new Gson().toJson(authentication.getName());
+        return authentication.getName();
     }
 
-    @RequestMapping(value = "/keys", method = RequestMethod.POST)
+    @RequestMapping(value = "/keys/{username}", method = RequestMethod.GET)
     @ResponseBody
-    public String keysGet(@RequestBody String username) {
-        return gson.toJson(keyDAO.getAllKeysByUsername(username));
+    public List<Key> keysGet(@PathVariable String username) {
+        return keyDAO.getAllKeysByUsername(username);
     }}
 
