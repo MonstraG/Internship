@@ -5,7 +5,7 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[] { WebMVCConfig.class };
+        return new Class[]{WebMVCConfig.class};
     }
 
     protected Class<?>[] getServletConfigClasses() {
@@ -15,4 +15,5 @@ public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitial
     protected String[] getServletMappings() {
         return new String[]{"/*"};
     }
+
 }

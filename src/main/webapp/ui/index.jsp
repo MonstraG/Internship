@@ -12,12 +12,25 @@
 <body ng-app="map" ng-controller="AppController">
     <div class="page">
         <div class="header">
-            <div class="key-select">
-                <label for="pickKey">Pick key:</label>
-                <select id="pickKey" ng-model="userdata" ng-options="key.key for key in keys" ng-change="getNewMarkers();"></select>
-                <!-- TODO: INPUT FIELD FOR MAX LOCATIONS -->
-                <!-- IF CHANGED LOCATIONS AMOUNT > PREVIOUS - SEND REQUEST TO DB -->
-                <!-- ELSE - JUST FORGET (CHANGED-PREVIOUS) AMOUNT FROM markers ARRAY -->
+            <div class="options">
+                <div class="option">
+                    <label for="pickKey">Pick key:</label>
+                    <select id="pickKey" ng-model="userdata" ng-options="key.key for key in keys" ng-change="getNewMarkers();"></select>
+                </div>
+                <div class="option" ng-if="userdata !== undefined">
+                    <label for="maxmarkers">Display</label>
+                    <input type="range" class="markeramount" list="tickmarks" id="maxmarkers" min="5" max="{{max_marker_amount}}" step="5"
+                           ng-model="markeramount" ng-change="onMarkerAmountChange(markeramount)">
+                    <!-- TODO: DB table settings with max for each user, and get max from there and stuff-->
+                    <datalist id="tickmarks">
+                        <option value="{{marker_amount_ticks[0]}}">
+                        <option value="{{marker_amount_ticks[1]}}">
+                        <option value="{{marker_amount_ticks[2]}}">
+                        <option value="{{marker_amount_ticks[3]}}">
+                        <option value="{{marker_amount_ticks[4]}}">
+                    </datalist>
+                    <span class="markeramountnumber">{{markeramount}}</span>
+                </div>
             </div>
             <div class="login-username">{{username}}</div>
         </div>

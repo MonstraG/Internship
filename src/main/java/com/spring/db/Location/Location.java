@@ -99,6 +99,10 @@ public class Location {
         return earthRadiusMeters * c;
     }
 
+    public double distance(Location loc) {
+        return distance(this.getLatitude(), this.getLongitude(), loc.getLatitude(), loc.getLongitude());
+    }
+
     /**
      * Finds difference in minutes between 2 timestamps.
      * @param currentTime first timestamp

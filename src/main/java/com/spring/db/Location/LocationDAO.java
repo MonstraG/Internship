@@ -48,9 +48,9 @@ public class LocationDAO {
         jdbcTemplate.update(SQL_DELETE_LOCATION, location.getId());
     }
 
-    public Location getLastLocation(Location location) {
-        String SQL_GET_LAST_LOCATION = "select * from locations where key = ? order by ts desc nulls last limit 1";
-        return jdbcTemplate.query(SQL_GET_LAST_LOCATION, new String[]{location.getKey()}, new ResultSetExtractor<Location>() {
+    public Location getLastLocation(String key) {
+        String SQL_GET_LAST_LOCATION = "select * from locations where key = ? order by ts desc limit 1";
+        return jdbcTemplate.query(SQL_GET_LAST_LOCATION, new String[]{key}, new ResultSetExtractor<Location>() {
             public Location extractData(ResultSet resultSet) throws SQLException, DataAccessException {
                 if (resultSet.next())
                     return locationMapper.mapRow(resultSet, 1);
@@ -59,5 +59,8 @@ public class LocationDAO {
         });
     }
 
-    //TODO: GET LAST X LOCATIONS
+    public List<Location> getLastNofLocations(String key, Long number) {
+        String SQL_GET_ALL = "select * from locations where key = ? order by ts desc limit ?";
+        return jdbcTemplate.query(SQL_GET_ALL, new Object[]{key, number}, locationMapper);
+    }
 }

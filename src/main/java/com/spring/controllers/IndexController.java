@@ -5,6 +5,7 @@ import com.spring.db.Key.Key;
 import com.spring.db.Key.KeyDAO;
 import com.spring.db.Location.Location;
 import com.spring.db.Location.LocationDAO;
+import com.spring.db.User.User;
 import com.spring.db.User.UserDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/*")
-class IndexController {
+public class IndexController {
 
     @Autowired
     LocationDAO locationDAO;
@@ -49,7 +50,7 @@ class IndexController {
 
         //getting last location from table
         Location oldLocation;
-        try { oldLocation = locationDAO.getLastLocation(location); }
+        try { oldLocation = locationDAO.getLastLocation(location.getKey()); }
         catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -87,6 +88,12 @@ class IndexController {
     @ResponseBody
     public List<Location> locationGet(@PathVariable String key) {
         return locationDAO.getAllLocationsByKey(key);
+    }
+
+    @RequestMapping(value = "/location/{key}/{number}", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Location> locationGet(@PathVariable String key, @PathVariable String number) {
+        return locationDAO.getLastNofLocations(key, Long.getLong(number));
     }
 
     @RequestMapping(value = "/location", method = RequestMethod.GET)
@@ -135,16 +142,18 @@ class IndexController {
         return new ModelAndView("login");
     }
 
-    @RequestMapping(value = "/username", method = RequestMethod.GET, produces="text/plain")
-    @ResponseBody
-    public String currentUserName(Authentication authentication) {
-        return authentication.getName();
-    }
-
     @RequestMapping(value = "/keys/{username}", method = RequestMethod.GET)
     @ResponseBody
     public List<Key> keysGet(@PathVariable String username) {
         return keyDAO.getAllKeysByUsername(username);
+    }
+
+    @RequestMapping(value = "/userdata", method = RequestMethod.GET)
+    @ResponseBody
+    public User settingsGets(Authentication authentication) {
+        User user = userDAO.getUserByUsername(authentication.getName());
+        user.setPassword("");
+        return user;
     }
 
     @Autowired

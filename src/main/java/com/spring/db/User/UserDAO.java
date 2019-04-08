@@ -20,7 +20,8 @@ public class UserDAO {
     private UserMapper userMapper = new UserMapper();
 
     public User getUserByUsername(String username) {
-        String SQL_FIND_KEY = "select * from users where username = ?";
+        String SQL_FIND_KEY = "select users.username, password, enabled, role, marker_amount from users, settings " +
+                "where users.username = settings.username and users.username = ?";
         return jdbcTemplate.query(SQL_FIND_KEY, new Object[]{username}, new ResultSetExtractor<User>() {
             public User extractData(ResultSet resultSet) throws SQLException, DataAccessException {
                 if (resultSet.next())
