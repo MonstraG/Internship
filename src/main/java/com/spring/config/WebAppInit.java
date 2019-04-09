@@ -4,16 +4,9 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 public class WebAppInit extends AbstractAnnotationConfigDispatcherServletInitializer {
 
-    protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{WebMVCConfig.class};
-    }
+    protected Class<?>[] getRootConfigClasses() { return new Class[]{WebMVCConfig.class}; }
 
-    protected Class<?>[] getServletConfigClasses() {
-        return null;
-    }
+    protected Class<?>[] getServletConfigClasses() { return null; }
 
-    protected String[] getServletMappings() {
-        return new String[]{"/*"};
-    }
-
+    protected String[] getServletMappings() { return new String[]{"/*"}; }
 }

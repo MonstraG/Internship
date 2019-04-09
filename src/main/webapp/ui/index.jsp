@@ -15,7 +15,7 @@
             <div class="options">
                 <div class="option" ng-style="optionsStyle">
                     <label for="maxmarkers">Display</label>
-                    <input type="range" class="markeramount" list="tickmarks" id="maxmarkers" min="5" max="{{options.max_marker_amount}}" step="5"
+                    <input type="range" class="markeramount" list="tickmarks" id="maxmarkers" min="5" max="{{options.maxMarkerAmount}}" step="5"
                            ng-model="options.displayamount" ng-change="onMarkerAmountChange()">
                     <datalist id="tickmarks">
                         <option value="{{marker_amount_ticks[0]}}">

@@ -29,6 +29,8 @@ public class IndexController {
     KeyDAO keyDAO;
     @Autowired
     UserDAO userDAO;
+    @Autowired
+    SimpMessagingTemplate template;
 
     @RequestMapping(value = "/location", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -44,8 +46,9 @@ public class IndexController {
 
         //getting last location from table
         Location oldLocation;
-        try { oldLocation = locationDAO.getLastLocation(location.getKey()); }
-        catch (Exception e) {
+        try {
+            oldLocation = locationDAO.getLastLocation(location.getKey());
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Following exception was thrown when trying to get last item from table:\n" + e.toString());
@@ -56,8 +59,7 @@ public class IndexController {
             Location updatedLocation = oldLocation.getAverageLocation(location);
             try {
                 locationDAO.updateLocation(updatedLocation);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Following exception was thrown when trying to update table item:\n" + e.toString());
@@ -67,8 +69,7 @@ public class IndexController {
             try {
                 locationDAO.createLocation(location);
                 updateEveryone(location);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Following exception was thrown when trying to add item to the table:\n" + e.toString());
@@ -76,7 +77,6 @@ public class IndexController {
         }
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-
 
     @RequestMapping(value = "/location/{key}", method = RequestMethod.GET)
     @ResponseBody
@@ -110,11 +110,9 @@ public class IndexController {
         try {
             if (userDAO.userExists(key.getUsername())) {
                 keyDAO.createKey(key);
-            }
-            else
+            } else
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Provided user does not exist.");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Following exception was thrown when trying to add item to the table:\n" + e.toString());
@@ -147,12 +145,9 @@ public class IndexController {
         return user;
     }
 
-    @Autowired
-    SimpMessagingTemplate template;
-
     private void updateEveryone(Location location) {
         this.template.convertAndSend("/location-updates-any/", location.getKey());
-        this.template.convertAndSend("/location-updates/" + location.getKey() +'/', location.toJSON());
+        this.template.convertAndSend("/location-updates/" + location.getKey() + '/', location.toJSON());
     }
 }
 

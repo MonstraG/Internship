@@ -16,14 +16,11 @@ angular.module("map", []).controller('AppController', function($scope, $rootScop
     $scope.options = {
         key: "",
         displayamount: 5,
-        max_marker_amount: 50,
+        maxMarkerAmount: 50,
         followNewMarkers: false,
-        opacitymode: false
     };
 
     $scope.activeKeys = new Set();
-
-    $scope.optionsStyle = {'opacity': 0.5};
 
     const socket = new WebSocket("ws://localhost:8080/messaging-endpoint");
     const stompClient = Stomp.over(socket);
@@ -34,21 +31,17 @@ angular.module("map", []).controller('AppController', function($scope, $rootScop
     });
 
     $scope.updateActiveDevices = function () {
-        for(let key of $scope.keys) {
+        $scope.keys.map(key => {
             let label = document.getElementById(key.key+'-span');
-            if (label !== null) {
-                if ($scope.activeKeys.has(key.key)) {
-                    label.classList.add('activeKey')
-                } else {
-                    label.classList.remove('activeKey')
-                }
+            if ($scope.activeKeys.has(key.key)) {
+                label.classList.add('activeKey')
+            } else {
+                label.classList.remove('activeKey')
             }
-        }
+        });
         $scope.activeKeys = new Set();
     };
-
     setInterval(function() {$scope.updateActiveDevices()}, 10000);
-
 
     $http.get('/userdata').then(response => {
         $scope.username = response.data.username;
@@ -57,26 +50,25 @@ angular.module("map", []).controller('AppController', function($scope, $rootScop
             $scope.keys = response.data;
         }, error => console.error(error));
 
-        $scope.options.max_marker_amount = response.data.markerAmount;
+        $scope.options.maxMarkerAmount = response.data.markerAmount;
         const ticks = [
             5,
-            (5 + $scope.options.max_marker_amount) / 4,
-            (5 + $scope.options.max_marker_amount) / 2,
-            3 * (5 + $scope.options.max_marker_amount) / 4,
-            $scope.options.max_marker_amount
+            (5 + $scope.options.maxMarkerAmount) / 4,
+            (5 + $scope.options.maxMarkerAmount) / 2,
+            3 * (5 + $scope.options.maxMarkerAmount) / 4,
+            $scope.options.maxMarkerAmount
         ];
         $scope.marker_amount_ticks = ticks.map(tick => Math.ceil(tick / 5) * 5)
     }, error => console.error(error));
 
     $scope.getNewMarkers = function(){
-        $scope.optionsStyle = {'opacity': 1.0};
         if (currentKeySubscription !== null) {
             stompClient.unsubscribe(currentKeySubscription.id);
         }
         currentKeySubscription = stompClient.subscribe('/location-updates/' + $scope.options.key + '/',
             location => {
                 $scope.addMarkerUnshift(JSON.parse(location.body));
-                while(markers.length > $scope.options.max_marker_amount) {
+                while(markers.length > $scope.options.maxMarkerAmount) {
                     markers[markers.length - 1].setMap(null);
                     markers.pop();
                 }
@@ -85,7 +77,7 @@ angular.module("map", []).controller('AppController', function($scope, $rootScop
 
         $scope.forgetAllMarkers();
 
-        $http.get('/location/' + $scope.options.key + '/' + $scope.options.max_marker_amount).then(response => {
+        $http.get('/location/' + $scope.options.key + '/' + $scope.options.maxMarkerAmount).then(response => {
             for (let location of response.data) {
                 $scope.addMarkerPush(location);
             }
@@ -130,10 +122,16 @@ angular.module("map", []).controller('AppController', function($scope, $rootScop
     };
 
     $scope.forgetAllMarkers = function () {
-        for(let marker of markers) {
-            marker.setMap(null);
-        }
-
+        markers.map(marker => marker.setMap(null));
         markers = [];
     };
 });
+
+/*TODO: add register page where new users would be added, and go there via button in header. all is controlled by
+    ngroute.
+    So, total list:
+    - Using ngRoute
+    - New registration page
+    - New controller method to register (which may include checking existence).
+    - (maybe) also add key adding interface because we actually have controller method for this?
+*/
