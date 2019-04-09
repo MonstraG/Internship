@@ -122,16 +122,16 @@ public class Location {
     }
 
     public double bearingTo(Location location) {
-        double dLon = (location.longitude - this.longitude);
-        double y = Math.sin(dLon) * Math.cos(location.longitude);
-        double x = Math.cos(this.latitude) * Math.sin(location.longitude) -
-                Math.sin(this.latitude) * Math.cos(location.longitude) * Math.cos(dLon);
-        double bearing = Math.atan2(y, x);
+        double lat1 = Math.toRadians(this.getLatitude());
+        double lng1 = Math.toRadians(this.getLongitude());
+        double lat2 = Math.toRadians(location.getLatitude());
+        double lng2 = Math.toRadians(location.getLongitude());
 
-        bearing = Math.toDegrees(bearing);
-        bearing = (bearing + 360) % 360;
-        bearing = 360 - bearing; // count degrees counter-clockwise - remove to make clockwise
+        double dLon = lng2 - lng1;
+        double y = Math.sin(dLon) * Math.cos(lat2);
+        double x = Math.cos(lat1) * Math.sin(lat2) -
+                Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
 
-        return bearing;
+        return (Math.toDegrees(Math.atan2(y, x)) + 360 ) % 360;
     }
 }

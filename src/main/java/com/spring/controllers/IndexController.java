@@ -6,7 +6,6 @@ import com.spring.db.Location.Location;
 import com.spring.db.Location.LocationDAO;
 import com.spring.db.User.User;
 import com.spring.db.User.UserDAO;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/*")
@@ -151,6 +151,7 @@ public class IndexController {
     SimpMessagingTemplate template;
 
     private void updateEveryone(Location location) {
+        this.template.convertAndSend("/location-updates-any/", location.getKey());
         this.template.convertAndSend("/location-updates/" + location.getKey() +'/', location.toJSON());
     }
 }

@@ -3,7 +3,6 @@ package com.spring.config;
 import com.spring.db.Location.Location;
 import com.spring.db.Location.LocationDAO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,6 +14,7 @@ import java.util.Random;
 
 @Component
 @EnableScheduling
+@Profile("dev")
 public class PhoneSim {
     private Location oldLoc;
     private Location veryOldLoc;
@@ -23,7 +23,7 @@ public class PhoneSim {
     @Autowired
     LocationDAO locationDAO;
 
-    private String[] debugKeys = {"debug", "debug2", "debug3"};
+    private String[] debugKeys = {"debug", "debug2" };
     private PhoneSim[] registeredPhoneSims = new PhoneSim[debugKeys.length];
     private boolean firstRun = true;
 
@@ -45,11 +45,10 @@ public class PhoneSim {
     SimpMessagingTemplate template;
 
     private void updateEveryone(Location location) {
+        this.template.convertAndSend("/location-updates-any/", location.getKey());
         this.template.convertAndSend("/location-updates/" + location.getKey() + '/', location.toJSON());
     }
 
-    @Bean
-    @Profile("dev")
     @Scheduled(fixedRate=5000)
     public void sendRandomLocations() {
         if (firstRun) {
@@ -63,7 +62,6 @@ public class PhoneSim {
                 locationDAO.createLocation(newLoc);
                 updateEveryone(newLoc);
                 ps.shiftLocations(newLoc);
-                System.out.println("Created new location for key " +  ps.key);
             }
         }
     }
@@ -75,11 +73,20 @@ public class PhoneSim {
 
     private Location getNewRandomLocation() {
         Random rand = new Random();
-        double r = rand.nextDouble() * 2;
+        double r = rand.nextDouble() * 2; //0 .. 2
         double bearing = veryOldLoc.bearingTo(oldLoc);
-        double angle = rand.nextDouble() + bearing;
+        double angle = Math.toRadians(Math.toDegrees(rand.nextDouble() * 2 - 1) + bearing);
+        double newLatitude = oldLoc.getLatitude() + Math.sqrt(r) * Math.cos(angle);
+        if(newLatitude > 90) {
+            newLatitude = 180 - newLatitude;
+        }
+        if(newLatitude < -90) {
+            newLatitude = newLatitude - 180;
+        }
+        double closerToEquatorModifier = newLatitude / 90;
+        newLatitude = newLatitude - closerToEquatorModifier;
         return new Location(key,
-                oldLoc.getLatitude() + Math.sqrt(r) * Math.cos(angle),
+                newLatitude,
                 oldLoc.getLongitude() + Math.sqrt(r) * Math.sin(angle));
     }
 }

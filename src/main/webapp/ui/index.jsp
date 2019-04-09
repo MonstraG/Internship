@@ -13,15 +13,10 @@
     <div class="page">
         <div class="header">
             <div class="options">
-                <div class="option">
-                    <label for="pickKey">Pick key:</label>
-                    <select id="pickKey" ng-model="userdata" ng-options="key.key for key in keys" ng-change="getNewMarkers();"></select>
-                </div>
-                <div class="option" ng-if="userdata !== undefined">
+                <div class="option" ng-style="optionsStyle">
                     <label for="maxmarkers">Display</label>
-                    <input type="range" class="markeramount" list="tickmarks" id="maxmarkers" min="5" max="{{max_marker_amount}}" step="5"
-                           ng-model="markeramount" ng-change="onMarkerAmountChange(markeramount)">
-                    <!-- TODO: DB table settings with max for each user, and get max from there and stuff-->
+                    <input type="range" class="markeramount" list="tickmarks" id="maxmarkers" min="5" max="{{options.max_marker_amount}}" step="5"
+                           ng-model="options.displayamount" ng-change="onMarkerAmountChange()">
                     <datalist id="tickmarks">
                         <option value="{{marker_amount_ticks[0]}}">
                         <option value="{{marker_amount_ticks[1]}}">
@@ -29,12 +24,31 @@
                         <option value="{{marker_amount_ticks[3]}}">
                         <option value="{{marker_amount_ticks[4]}}">
                     </datalist>
-                    <span class="markeramountnumber">{{markeramount}}</span>
+                    <span class="markeramountnumber">{{options.displayamount}}</span>
+                </div>
+                <div class="option" ng-style="optionsStyle">
+                    <label for="follownewmarkers">Follow the damn train, CJ!</label>
+                    <input id="follownewmarkers" type="checkbox" ng-model="options.followNewMarkers" ng-true-value="'true'" ng-false-value="'false'">
                 </div>
             </div>
             <div class="login-username">{{username}}</div>
         </div>
-        <div class="map" id="map"></div>
+        <div class="main">
+            <div class="sidebar">
+                <form id="pickKey">
+                    <ul class="keyslist">
+                        <li class="keyslist-item" ng-repeat="key in keys">
+                            <label>
+                                <input id={{key.key}} class="keyradio" type="radio" ng-model="options.key" name="name" value="{{key.key}}"
+                                        ng-change="getNewMarkers();"/>
+                                <span id="{{key.key}}-span" class="keyspan" ng-dblclick="centerMap();">{{key.key}}</span>
+                            </label>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+            <div class="map" id="map"></div>
+        </div>
     </div>
 </body>
 </html>
