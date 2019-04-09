@@ -99,10 +99,6 @@ public class Location {
         return earthRadiusMeters * c;
     }
 
-    public double distance(Location loc) {
-        return distance(this.getLatitude(), this.getLongitude(), loc.getLatitude(), loc.getLongitude());
-    }
-
     /**
      * Finds difference in minutes between 2 timestamps.
      * @param currentTime first timestamp
@@ -123,5 +119,19 @@ public class Location {
     public Location getAverageLocation(Location secondLocation) {
         return new Location(this.getId(), this.getKey(), (this.getLatitude() + secondLocation.getLatitude()) / 2,
                 (this.getLongitude() + secondLocation.getLongitude()) / 2);
+    }
+
+    public double bearingTo(Location location) {
+        double dLon = (location.longitude - this.longitude);
+        double y = Math.sin(dLon) * Math.cos(location.longitude);
+        double x = Math.cos(this.latitude) * Math.sin(location.longitude) -
+                Math.sin(this.latitude) * Math.cos(location.longitude) * Math.cos(dLon);
+        double bearing = Math.atan2(y, x);
+
+        bearing = Math.toDegrees(bearing);
+        bearing = (bearing + 360) % 360;
+        bearing = 360 - bearing; // count degrees counter-clockwise - remove to make clockwise
+
+        return bearing;
     }
 }

@@ -14,8 +14,6 @@ angular.module("map", []).controller('AppController', function($scope, $rootScop
         map: $scope.map
     });
 
-
-
     const socket = new WebSocket("ws://localhost:8080/messaging-endpoint");
     const stompClient = Stomp.over(socket);
     stompClient.connect({}, function () {});
@@ -38,13 +36,11 @@ angular.module("map", []).controller('AppController', function($scope, $rootScop
         $scope.marker_amount_ticks = ticks.map(tick => Math.ceil(tick / 5) * 5)
     }, error => console.error(error));
 
-
-
     $scope.getNewMarkers = function(){
         if (currentSubscription !== null) {
-            stompClient.unsubscribe(currentSubscription);
+            stompClient.unsubscribe(currentSubscription.id);
         }
-        currentSubscription = stompClient.subscribe('/location-updates/' + $scope.userdata.key,
+        currentSubscription = stompClient.subscribe('/location-updates/' + $scope.userdata.key + '/',
             location => {
                 $scope.addMarkerUnshift(JSON.parse(location.body));
                 while(markers.length > $scope.max_marker_amount) {

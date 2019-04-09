@@ -8,13 +8,6 @@ public class Key implements Serializable {
 
     Key(){}
 
-    public Key(String username, String key) {
-        if (username == null || key == null)
-            throw new IllegalArgumentException();
-        this.username = username;
-        this.key = key;
-    }
-
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 

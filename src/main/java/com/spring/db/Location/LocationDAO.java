@@ -43,11 +43,6 @@ public class LocationDAO {
                 location.getId());
     }
 
-    public void deleteLocation(Location location) {
-        String SQL_DELETE_LOCATION = "delete from locations where id = ?";
-        jdbcTemplate.update(SQL_DELETE_LOCATION, location.getId());
-    }
-
     public Location getLastLocation(String key) {
         String SQL_GET_LAST_LOCATION = "select * from locations where key = ? order by ts desc limit 1";
         return jdbcTemplate.query(SQL_GET_LAST_LOCATION, new String[]{key}, new ResultSetExtractor<Location>() {

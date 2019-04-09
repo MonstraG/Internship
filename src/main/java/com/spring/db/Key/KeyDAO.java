@@ -16,11 +16,6 @@ public class KeyDAO {
 
     private KeyMapper keyMapper = new KeyMapper();
 
-    public List<Key> getAllKeys() {
-        String SQL_GET_ALL = "select * from keys";
-        return jdbcTemplate.query(SQL_GET_ALL, keyMapper);
-    }
-
     public List<Key> getAllKeysByUsername(String username) {
         String SQL_GET_ALL = "select * from keys where username = ?";
         return jdbcTemplate.query(SQL_GET_ALL, new Object[]{username}, keyMapper);
@@ -38,10 +33,5 @@ public class KeyDAO {
     public void createKey(Key key) {
         String SQL_INSERT_KEY = "insert into keys(username, key) values(?, ?) ON CONFLICT DO NOTHING";
         jdbcTemplate.update(SQL_INSERT_KEY, key.getUsername(), key.getKey());
-    }
-
-    public void deleteKey(Key key) {
-        String SQL_DELETE_KEY = "delete from keys where key = ?";
-        jdbcTemplate.update(SQL_DELETE_KEY, key.getKey());
     }
 }

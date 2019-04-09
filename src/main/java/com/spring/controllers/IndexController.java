@@ -1,6 +1,5 @@
 package com.spring.controllers;
 
-import com.google.gson.Gson;
 import com.spring.db.Key.Key;
 import com.spring.db.Key.KeyDAO;
 import com.spring.db.Location.Location;
@@ -9,11 +8,9 @@ import com.spring.db.User.User;
 import com.spring.db.User.UserDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -33,9 +30,6 @@ public class IndexController {
     @Autowired
     UserDAO userDAO;
 
-    /**
-     * Handles POST requests on /location
-     */
     @RequestMapping(value = "/location", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity locationPost(@RequestBody Location payload, @RequestHeader Map<String, String> header) {
@@ -102,9 +96,6 @@ public class IndexController {
         return locationDAO.getAllLocations();
     }
 
-    /**
-     * Handles POST requests on /install:
-     */
     @RequestMapping(value = "/install", method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity installKey(@RequestBody Key key) {
@@ -159,8 +150,8 @@ public class IndexController {
     @Autowired
     SimpMessagingTemplate template;
 
-    public void updateEveryone(Location location) {
-        this.template.convertAndSend("/location-updates/" + location.getKey(), location.toJSON());
+    private void updateEveryone(Location location) {
+        this.template.convertAndSend("/location-updates/" + location.getKey() +'/', location.toJSON());
     }
 }
 
