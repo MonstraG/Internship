@@ -50,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
                 .and()
             .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/index")
+                .defaultSuccessUrl("/ui")
                 .permitAll();
     }
 

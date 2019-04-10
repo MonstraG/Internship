@@ -10,6 +10,20 @@ public class User {
 
     User(){}
 
+    User(String username, String password){
+        this.username = username;
+        this.password = password;
+        this.role = "USER";
+        this.enabled = true;
+    }
+
+    User(String username, String password, String role, boolean enabled){
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.enabled = enabled;
+    }
+
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 

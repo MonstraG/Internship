@@ -1,13 +1,13 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Thymeleaf test</title>
+    <title>Login</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="../resources/css/login.css">
 </head>
 <body>
 <div class="login-page">
-    <form name="f" th:action="@{/login}" method="post">
+    <form name="f" th:action="@{/login}" th:object="${user}" method="post">
         <div th:if="${param.error}" class="login-error">
             Invalid username and password.
         </div>

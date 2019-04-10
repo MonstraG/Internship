@@ -10,7 +10,11 @@ app.controller('RouteController', function() {
             templateUrl: 'static/register.jsp',
             controller: 'RegisterController'
         })
+        .when('/newUseer', {
+
+        })
         .otherwise({redirectTo:'/map'});
+
 });
 
 app.controller('MapController', function($scope, $http) {
@@ -51,7 +55,6 @@ app.controller('MapController', function($scope, $http) {
         //get keys
         $http.get('/keys/' + $scope.username).then(response => {
             $scope.keys = response.data;
-            console.log($scope.keys)
         }, error => console.error(error));
 
         $scope.options.maxMarkerAmount = response.data.markerAmount;
@@ -135,12 +138,32 @@ app.controller('MapController', function($scope, $http) {
     };
 });
 
-app.controller('RegisterController', function() {});
+app.controller('RegisterController', function($scope, $http) {
+    $scope.userData = {
+        username: "",
+        password: "",
+        role: 'USER',
+        enabled: true
+    };
 
+    $scope.userExists = false;
+    $scope.formNotValid = false;
+    $scope.userSuccessfullyCreated = false;
 
-/*TODO: add register page where new users would be added, and go there via button in header. all is controlled by ngroute.
-    So, total list:
-    - New registration page
-    - New controller method to register (which may include checking existence).
-    - (maybe) also add key adding interface because we actually have controller method for this?
-*/
+    $scope.register = function () {
+        $scope.userExists = false;
+        $scope.formNotValid = false;
+        $scope.userSuccessfullyCreated = false;
+        if ($scope.userData.username === "" || $scope.userData.password === "") {
+            $scope.formNotValid = true;
+        } else {
+            $http.post('/register', JSON.stringify($scope.userData)).then(response => {
+                if (response.data === "User already exists.") {
+                    $scope.userExists = true;
+                } else {
+                    $scope.userSuccessfullyCreated = true;
+                }
+            }, error => console.error(error));
+        }
+    }
+});
