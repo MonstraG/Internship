@@ -121,9 +121,19 @@ public class IndexController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @RequestMapping(value = "/ui/index", method = RequestMethod.GET)
+    @RequestMapping(value = "/ui", method = RequestMethod.GET)
     public ModelAndView uiIndexGet() {
+        return new ModelAndView("templates/index");
+    }
+
+    @RequestMapping(value = "/map", method = RequestMethod.GET)
+    public ModelAndView mapGet() {
         return new ModelAndView("templates/map");
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public ModelAndView registerGet() {
+        return new ModelAndView("templates/register");
     }
 
     @RequestMapping(value = "/login")

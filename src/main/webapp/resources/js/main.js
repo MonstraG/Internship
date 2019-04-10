@@ -1,4 +1,19 @@
-angular.module("app", []).controller('AppController', function($scope, $rootScope, $compile, $http) {
+const app = angular.module("app", ['ngRoute']);
+app.controller('RouteController', function() {
+}).config(function($routeProvider) {
+    $routeProvider
+        .when('/map', {
+            templateUrl: 'map.jsp',
+            controller: 'MapController'
+        })
+        .when('/register', {
+            templateUrl: 'register.jsp',
+            controller: 'RegisterController'
+        })
+        .otherwise({redirectTo:'/map'});
+});
+
+app.controller('MapController', function($scope, $http) {
     $scope.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 4,
         center: {lat: 0, lng: 0}
@@ -62,7 +77,7 @@ angular.module("app", []).controller('AppController', function($scope, $rootScop
         });
         $scope.activeKeys.clear();
     };
-    setInterval($scope.updateActiveDevices, 10000);
+    const deviceUpdate = setInterval($scope.updateActiveDevices, 10000);
 
     //key switch
     $scope.getNewMarkers = function(){
@@ -72,7 +87,9 @@ angular.module("app", []).controller('AppController', function($scope, $rootScop
         currentKeySubscription = stompClient.subscribe('/location-updates/' + $scope.options.key,
             response => {
                 const location = JSON.parse(response.body);
-                markers[0].setMap(null);
+                if (markers.length > 0) {
+                    markers[0].setMap(null);
+                }
                 markers.unshift(new google.maps.Marker({
                     position: new google.maps.LatLng(location.latitude, location.longitude),
                 }));
@@ -90,34 +107,42 @@ angular.module("app", []).controller('AppController', function($scope, $rootScop
                     position: new google.maps.LatLng(location.latitude, location.longitude),
                 }));
             });
-            if (markers.length > 0) {
-                $scope.onMarkerChange()
-            }
+            $scope.onMarkerChange()
         }, error => console.error(error));
     };
 
     $scope.onMarkerChange = function() {
-        const path = markers.slice(0, $scope.options.displayAmount).map(marker => marker.position);
-        markerPath.setPath(path);
-        markers[0].setMap($scope.map);
-        if ($scope.options.followNewMarkers === 'true') {
-            $scope.centerMap();
+        if (markers.length > 0) {
+            const path = markers.slice(0, $scope.options.displayAmount).map(marker => marker.position);
+            markerPath.setPath(path);
+            markers[0].setMap($scope.map);
+            if ($scope.options.followNewMarkers === 'true') {
+                $scope.centerMap();
+            }
         }
     };
 
     $scope.centerMap = function() {
-        $scope.map.setCenter(markers[0].position);
+        if (markers.length > 0) {
+            $scope.map.setCenter(markers[0].position);
+        }
     };
 
     $scope.forgetAllMarkers = function () {
         markers.map(marker => marker.setMap(null));
         markers.length = 0;
     };
+
+    $scope.clearDeviceUpdateInterval = function () {
+        clearInterval(deviceUpdate);
+    }
 });
+
+app.controller('RegisterController', function() {});
+
 
 /*TODO: add register page where new users would be added, and go there via button in header. all is controlled by ngroute.
     So, total list:
-    - Using ngRoute
     - New registration page
     - New controller method to register (which may include checking existence).
     - (maybe) also add key adding interface because we actually have controller method for this?
