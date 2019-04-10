@@ -31,7 +31,6 @@ body {
 
 .option
 {
-    align-self: center;
     padding: 0 10px;
     display: flex;
     align-items: center;
@@ -54,8 +53,10 @@ select
 
 .login-username
 {
-    width: 5%;
+    display: flex;
+    width: 10%;
     padding: 10px;
+    align-items: center;
 }
 
 .sidebar {
@@ -83,20 +84,18 @@ select
     flex-grow: 1;
 }
 
-/*
 .login-button {
     -webkit-border-radius: 3px;
     border-radius: 3px;
     position: relative;
-    padding: 10px 10px 10px 10px;
+    padding: 10px;
+    margin: 10px;
     color: rgba(255,255,255,0.95);
     -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
     box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
     background: dodgerblue;
-    width: 8%;
-    margin-left: 92%
+    width: 100px;
 }
-*/
 
 .markeramountnumber
 {

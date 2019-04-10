@@ -1,4 +1,4 @@
-angular.module("map", []).controller('AppController', function($scope, $rootScope, $compile, $http) {
+angular.module("app", []).controller('AppController', function($scope, $rootScope, $compile, $http) {
     $scope.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 4,
         center: {lat: 0, lng: 0}
@@ -34,8 +34,9 @@ angular.module("map", []).controller('AppController', function($scope, $rootScop
     $http.get('/userdata').then(response => {
         $scope.username = response.data.username;
         //get keys
-        $http.get('/keys/${$scope.username}').then(response => {
+        $http.get('/keys/' + $scope.username).then(response => {
             $scope.keys = response.data;
+            console.log($scope.keys)
         }, error => console.error(error));
 
         $scope.options.maxMarkerAmount = response.data.markerAmount;
@@ -68,7 +69,7 @@ angular.module("map", []).controller('AppController', function($scope, $rootScop
         if (currentKeySubscription !== null) {
             stompClient.unsubscribe(currentKeySubscription.id);
         }
-        currentKeySubscription = stompClient.subscribe('/location-updates/${$scope.options.key}/',
+        currentKeySubscription = stompClient.subscribe('/location-updates/' + $scope.options.key,
             response => {
                 const location = JSON.parse(response.body);
                 markers[0].setMap(null);
@@ -82,14 +83,16 @@ angular.module("map", []).controller('AppController', function($scope, $rootScop
                 $scope.onMarkerChange()
             });
 
-        $http.get('/location/${$scope.options.key}/${$scope.options.maxMarkerAmount}').then(response => {
+        $http.get('/location/' + $scope.options.key + '/' + $scope.options.maxMarkerAmount).then(response => {
             $scope.forgetAllMarkers();
             response.data.map(location => {
                 markers.push(new google.maps.Marker({
                     position: new google.maps.LatLng(location.latitude, location.longitude),
                 }));
             });
-            $scope.onMarkerChange()
+            if (markers.length > 0) {
+                $scope.onMarkerChange()
+            }
         }, error => console.error(error));
     };
 

@@ -1,7 +1,6 @@
 package com.spring.config;
 
 import com.spring.db.User.UserDetailServiceImp;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         http
             .csrf().disable().addFilterAfter(keyFilter, BasicAuthenticationFilter.class)
             .authorizeRequests()
-                .antMatchers( "/location", "/login*", "/resources/*").permitAll()
+                .antMatchers( "/location", "/login*", "/resources/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/install").permitAll()
                 .anyRequest().authenticated()
                 .and()

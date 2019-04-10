@@ -3,7 +3,7 @@
 <head>
     <title>Thymeleaf test</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="resources/login.css">
+    <link rel="stylesheet" type="text/css" href="../resources/css/login.css">
 </head>
 <body>
 <div class="login-page">

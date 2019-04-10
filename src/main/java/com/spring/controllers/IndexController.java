@@ -123,12 +123,12 @@ public class IndexController {
 
     @RequestMapping(value = "/ui/index", method = RequestMethod.GET)
     public ModelAndView uiIndexGet() {
-        return new ModelAndView("ui/index");
+        return new ModelAndView("templates/map");
     }
 
     @RequestMapping(value = "/login")
     public ModelAndView login() {
-        return new ModelAndView("login");
+        return new ModelAndView("templates/login");
     }
 
     @RequestMapping(value = "/keys/{username}", method = RequestMethod.GET)
@@ -147,7 +147,7 @@ public class IndexController {
 
     private void updateEveryone(Location location) {
         this.template.convertAndSend("/location-updates-any/", location.getKey());
-        this.template.convertAndSend("/location-updates/" + location.getKey() + '/', location.toJSON());
+        this.template.convertAndSend("/location-updates/" + location.getKey(), location.toJSON());
     }
 }
 
