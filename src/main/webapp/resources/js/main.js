@@ -3,11 +3,11 @@ app.controller('RouteController', function() {
 }).config(function($routeProvider) {
     $routeProvider
         .when('/map', {
-            templateUrl: 'map.jsp',
+            templateUrl: 'static/map.jsp',
             controller: 'MapController'
         })
         .when('/register', {
-            templateUrl: 'register.jsp',
+            templateUrl: 'static/register.jsp',
             controller: 'RegisterController'
         })
         .otherwise({redirectTo:'/map'});
@@ -78,6 +78,7 @@ app.controller('MapController', function($scope, $http) {
         $scope.activeKeys.clear();
     };
     const deviceUpdate = setInterval($scope.updateActiveDevices, 10000);
+    $scope.$on("$destroy", function () {clearInterval(deviceUpdate);});
 
     //key switch
     $scope.getNewMarkers = function(){
@@ -132,10 +133,6 @@ app.controller('MapController', function($scope, $http) {
         markers.map(marker => marker.setMap(null));
         markers.length = 0;
     };
-
-    $scope.clearDeviceUpdateInterval = function () {
-        clearInterval(deviceUpdate);
-    }
 });
 
 app.controller('RegisterController', function() {});

@@ -1,91 +1,72 @@
-/* header */
-.header {
-    margin: 0 0 10px 0;
-    padding: 10px;
+.page {
+    flex-direction: column;
+    height: 100vh;
+}
+
+.page, .options, .option,.login-username, .main, header {
+    display: flex;
+}
+
+.shadow {
     -webkit-box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
     box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
-    height: 40px;
-    display: flex;
-    align-items: stretch;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-
 }
 
-/* header - left part */
-.options
-{
-    display: flex;
-    padding-left: 10px;
-}
-
-.option
-{
-    padding: 0 10px;
-    display: flex;
+.option, .login-register, header {
     align-items: center;
 }
 
-.markeramount
-{
-    margin: 0 10px;
+/* header */
+header {
+    margin: 0 0 10px 0;
+    padding: 0 10px;
+    justify-content: space-between;
 }
 
+.option, .login-button {
+    padding: 10px;
+}
 
-.markeramountnumber
-{
+.markeramount, .login-button {
+    margin: 10px;
+}
+
+/* header - left part */
+.markeramountnumber {
     font-size: 20px;
     color: cornflowerblue;
 }
 
 /* header - right part */
-.login-username
-{
-    display: flex;
-    align-items: center;
-}
-
 .login-button {
-    -webkit-border-radius: 3px;
     border-radius: 3px;
-    position: relative;
-    padding: 10px;
-    margin: 10px;
     color: rgba(255,255,255,0.95);
-    -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
-    box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.2);
     background: dodgerblue;
     width: 100px;
 }
 
 /* main */
-.main
-{
-    display: flex;
+.main {
+    flex: 1 1 auto;
 }
 
 /* sidebar */
-.sidebar {
+aside {
     width: 200px;
-    -webkit-box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
-    box-shadow: 2px 2px 2px 2px rgba(0,0,0,0.2);
     margin-right: 10px
 }
 
-
-.keyslist
-{
+.keyslist {
     list-style: none;
     padding: 10px 20px;
 }
 
-:checked + span
-{
+:checked + label {
     color: cornflowerblue;
+    opacity: 0.8;
 }
 
-.keyradio
-{
+.keyradio {
     display: none;
 }
 
@@ -98,15 +79,12 @@
     opacity: 0.6;
 }
 
-.activeKey
-{
-    opacity: 1.0;
+.activeKey {
+    opacity: 1.0 !important; /* overrides :checked + label opacity */
     background-color: rgba(145, 240, 145, 0.5);
 }
-
 
 /* map */
 .map {
     width: 100%;
-    height: 900px; /* FIXME */
 }

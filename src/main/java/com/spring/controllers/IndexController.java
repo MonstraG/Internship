@@ -126,16 +126,6 @@ public class IndexController {
         return new ModelAndView("templates/index");
     }
 
-    @RequestMapping(value = "/map", method = RequestMethod.GET)
-    public ModelAndView mapGet() {
-        return new ModelAndView("templates/map");
-    }
-
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public ModelAndView registerGet() {
-        return new ModelAndView("templates/register");
-    }
-
     @RequestMapping(value = "/login")
     public ModelAndView login() {
         return new ModelAndView("templates/login");
