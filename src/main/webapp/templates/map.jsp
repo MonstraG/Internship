@@ -19,7 +19,10 @@
             </div>
         </section>
         <section class="login-register">
-            {{username}}
+            <span class="loggedInUsername" ng-click="switchLogoutWindow();">{{username}}</span>
+            <div class="logout-window shadow hidden" id="logoutWindow" hidden>
+                <a class="logout-link" href="/login?logout">Log out?</a>
+            </div>
             <a href="#!register"><button class="login-btn button shadow">Register</button></a>
         </section>
     </header>

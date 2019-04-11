@@ -46,6 +46,11 @@ app.controller('MapController', function($scope, $http) {
         keyToInstall: "1"
     };
 
+    $scope.logoutWindowOpen = false;
+    setTimeout(function () {
+        document.getElementById("logoutWindow").hidden = false;
+    }, 50);
+
 
     const socket = new WebSocket("ws://localhost:8080/messaging-endpoint");
     const stompClient = Stomp.over(socket);
@@ -161,6 +166,10 @@ app.controller('MapController', function($scope, $http) {
             }
             $scope.keyInstaller.installNewKey = false;
         }
+    };
+
+    $scope.switchLogoutWindow = function () {
+        document.getElementById("logoutWindow").classList.toggle("hidden");
     }
 });
 
