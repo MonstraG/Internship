@@ -19,7 +19,7 @@
             </div>
         </section>
         <section class="login-register">
-            <span class="loggedInUsername" ng-click="switchLogoutWindow();">{{username}}</span>
+            <span class="loggedInUsername not-selectable" ng-click="switchLogoutWindow();">{{username}}</span>
             <div class="logout-window shadow hidden" id="logoutWindow" hidden>
                 <a class="logout-link" href="/login?logout">Log out?</a>
             </div>
@@ -37,7 +37,7 @@
                         <li class="keyslist-item" ng-repeat="key in keys">
                             <input id={{key.key}} class="keyradio" type="radio" ng-model="options.key" name="name"
                                    value="{{key.key}}" ng-change="getNewMarkers();"/>
-                            <label for="{{key.key}}"id="{{key.key}}-span" class="keyspan" ng-dblclick="centerMap();">{{key.key}}</label>
+                            <label for="{{key.key}}"id="{{key.key}}-span" class="keyspan not-selectable" ng-dblclick="centerMap();">{{key.key}}</label>
                         </li>
                     </ul>
                 </div>

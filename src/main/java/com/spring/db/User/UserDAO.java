@@ -43,5 +43,7 @@ public class UserDAO {
     public void createUser(User user) {
         String SQL_CREATE_USER = "insert into users(username, password, enabled, role) values(?, ?, ?, ?)";
         jdbcTemplate.update(SQL_CREATE_USER, user.getUsername(), user.getPassword(), user.isEnabled(), user.getRole());
+        String SQL_CREATE_USER_DEFAULT_SETTINGS = "insert into settings(username, marker_amount) values (?, ?)";
+        jdbcTemplate.update(SQL_CREATE_USER_DEFAULT_SETTINGS, user.getUsername(), 100);
     }
 }

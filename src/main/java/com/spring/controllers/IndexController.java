@@ -12,7 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,7 +33,7 @@ public class IndexController {
     @Autowired
     SimpMessagingTemplate template;
     @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
+    PasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "/location", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -129,7 +129,7 @@ public class IndexController {
     public ResponseEntity registerUser(@RequestBody User user) {
         try {
             if (!userDAO.userExists(user.getUsername())) {
-                user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
                 userDAO.createUser(user);
             } else
                 return ResponseEntity.status(HttpStatus.OK).body("User already exists.");

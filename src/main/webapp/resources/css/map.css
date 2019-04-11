@@ -31,18 +31,65 @@ header {
     margin: 10px;
 }
 
+.markeramountnumber, .logout-link, :checked + label {
+    color: cornflowerblue;
+}
+
+.button, .input-field {
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
 /* header - left part */
 .markeramountnumber {
     font-size: 20px;
-    color: cornflowerblue;
 }
 
 /* header - right part */
 .button {
-    border-radius: 3px;
     color: rgba(255,255,255,0.95);
-    background: dodgerblue;
+    background: cornflowerblue;
     width: 100px;
+}
+
+/* logout window */
+.hidden {
+    opacity: 0;
+}
+
+.logout-window, .logout-window:after {
+    position: absolute;
+}
+
+.logout-window {
+    width: 100px;
+    height: 50px;
+    z-index: 1;
+    right: 105px;
+    background: #f1f1f1;
+    border-radius: 2px;
+    top: 60px;
+    transition: 0.1s ease-in;
+}
+
+.logout-window:after {
+    bottom: 100%;
+    left: 50%;
+    content: " ";
+    height: 0;
+    width: 0;
+    pointer-events: none;
+    border: 20px solid rgba(255, 255, 255, 0);
+    border-bottom-color: #f1f1f1;
+    margin-left: -20px;
+}
+
+.logout-link
+{
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    padding: 14px;
 }
 
 /* main */
@@ -63,8 +110,6 @@ aside {
 .input-field {
     padding: 5px 0;
     margin-left: 10px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
     color: rgba(0,0,0,0.95);
     text-shadow: 1px 1px 0 rgba(255,255,255,0.66) ;
     width: 85%;
@@ -91,7 +136,6 @@ aside {
 }
 
 :checked + label {
-    color: cornflowerblue;
     opacity: 0.8;
 }
 
@@ -100,12 +144,15 @@ aside {
 }
 
 .keyspan {
+    opacity: 0.6;
+}
+
+.not-selectable {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none;
-    opacity: 0.6;
 }
 
 .activeKey {
@@ -116,43 +163,4 @@ aside {
 /* map */
 .map {
     width: 100%;
-}
-
-/* logout window */
-.hidden {
-    opacity: 0;
-}
-
-.logout-window {
-    width: 100px;
-    height: 50px;
-    position: absolute;
-    z-index: 1;
-    right: 105px;
-    background: #f1f1f1;
-    border-radius: 2px;
-    top: 60px;
-    transition: 0.1s ease-in;
-}
-
-.logout-window:after {
-    bottom: 100%;
-    left: 50%;
-    content: " ";
-    height: 0;
-    width: 0;
-    position: absolute;
-    pointer-events: none;
-    border: 20px solid rgba(255, 255, 255, 0);
-    border-bottom-color: #f1f1f1;
-    margin-left: -20px;
-}
-
-.logout-link
-{
-    display: block;
-    text-decoration: none;
-    text-align: center;
-    padding: 14px;
-    color: cornflowerblue;
 }
