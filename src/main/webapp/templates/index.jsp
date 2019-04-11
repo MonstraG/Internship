@@ -4,6 +4,7 @@
     <title>Map</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" href="../resources/css/main.css">
+    <link rel='shortcut icon' type='image/x-icon' href='../resources/img/favicon.ico' />
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular-route.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js"></script>

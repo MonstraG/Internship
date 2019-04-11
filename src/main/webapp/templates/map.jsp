@@ -20,19 +20,24 @@
         </section>
         <section class="login-register">
             {{username}}
-            <a href="#!register"><button class="login-button shadow">Register</button></a>
+            <a href="#!register"><button class="login-btn button shadow">Register</button></a>
         </section>
     </header>
     <section class="main">
         <aside class="sidebar shadow">
             <form id="pickKey">
-                <ul class="keyslist">
-                    <li class="keyslist-item" ng-repeat="key in keys">
-                        <input id={{key.key}} class="keyradio" type="radio" ng-model="options.key" name="name"
-                               value="{{key.key}}" ng-change="getNewMarkers();"/>
-                        <label for="{{key.key}}"id="{{key.key}}-span" class="keyspan" ng-dblclick="centerMap();">{{key.key}}</label>
-                    </li>
-                </ul>
+                <button class="button install-key-btn shadow" ng-click="onInstallNewKeyBtn();">Install new key</button>
+                <div class="scroll-list">
+                    <input ng-if="keyInstaller.installNewKey" id="keyinstaller" ng-model="keyInstaller.keyToInstall"
+                           class="input-field shadow" placeholder="Key" >
+                    <ul class="keyslist">
+                        <li class="keyslist-item" ng-repeat="key in keys">
+                            <input id={{key.key}} class="keyradio" type="radio" ng-model="options.key" name="name"
+                                   value="{{key.key}}" ng-change="getNewMarkers();"/>
+                            <label for="{{key.key}}"id="{{key.key}}-span" class="keyspan" ng-dblclick="centerMap();">{{key.key}}</label>
+                        </li>
+                    </ul>
+                </div>
             </form>
         </aside>
         <article class="map" id="map"></article>

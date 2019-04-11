@@ -41,6 +41,12 @@ app.controller('MapController', function($scope, $http) {
 
     $scope.activeKeys = new Set();
 
+    $scope.keyInstaller = {
+        installNewKey: false,
+        keyToInstall: "1"
+    };
+
+
     const socket = new WebSocket("ws://localhost:8080/messaging-endpoint");
     const stompClient = Stomp.over(socket);
     stompClient.connect({}, function () {
@@ -52,10 +58,8 @@ app.controller('MapController', function($scope, $http) {
     //initial get
     $http.get('/userdata').then(response => {
         $scope.username = response.data.username;
-        //get keys
-        $http.get('/keys/' + $scope.username).then(response => {
-            $scope.keys = response.data;
-        }, error => console.error(error));
+
+        $scope.getKeys();
 
         $scope.options.maxMarkerAmount = response.data.markerAmount;
         const ticks = [
@@ -68,6 +72,11 @@ app.controller('MapController', function($scope, $http) {
         $scope.marker_amount_ticks = ticks.map(tick => Math.ceil(tick / 5) * 5)
     }, error => console.error(error));
 
+    $scope.getKeys = function () {
+        $http.get('/keys/' + $scope.username).then(response => {
+            $scope.keys = response.data;
+        }, error => console.error(error));
+    };
 
     $scope.updateActiveDevices = function () {
         $scope.keys.map(key => {
@@ -136,6 +145,23 @@ app.controller('MapController', function($scope, $http) {
         markers.map(marker => marker.setMap(null));
         markers.length = 0;
     };
+
+    $scope.onInstallNewKeyBtn = function () {
+        if (!$scope.keyInstaller.installNewKey) {
+            $scope.keyInstaller.installNewKey = true;
+            setTimeout(function() {document.getElementById("keyinstaller").focus()}, 0);
+            $scope.keyInstaller.keyToInstall = "";
+        } else {
+            if ($scope.keyInstaller.keyToInstall !== "") {
+                $http.post('/install', {'username': $scope.username, 'key': $scope.keyInstaller.keyToInstall})
+                    .then(resp => {
+                        $scope.getKeys();
+                    }
+                );
+            }
+            $scope.keyInstaller.installNewKey = false;
+        }
+    }
 });
 
 app.controller('RegisterController', function($scope, $http) {

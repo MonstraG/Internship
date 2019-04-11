@@ -8,7 +8,7 @@
         </div>
         <div class="form-group">
             <label for="password" class="form-label">Password</label>
-            <input id="password" ng-model="userData.password" name="password" type="password" class="input-field"/>
+            <input id="password" ng-model="userData.password" name="password" class="input-field"/>
         </div>
         <div class="form-footer">
             <div>
